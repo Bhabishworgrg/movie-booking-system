@@ -2,10 +2,6 @@
 .venv/
 .env
 
-#Alembic
-alembic.ini
-migrations/
-
 # Python
 __pycache__/
 *.py[cod]
