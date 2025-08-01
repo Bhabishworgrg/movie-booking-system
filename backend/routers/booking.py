@@ -76,7 +76,7 @@ def read_booking(id: int, session: SessionDep):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[None])
+@router.patch('/{id}/cancel', response_model=ResponseModel[None])
 def cancel_booking(id: int, session: SessionDep):
     try:
         success = crud.cancel_booking(id, session)

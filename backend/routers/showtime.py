@@ -98,7 +98,7 @@ def update_showtime(id: int, showtime: ShowtimeIn, session: SessionDep):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[None])
+@router.patch('/{id}/archive', response_model=ResponseModel[None])
 def archive_showtime(id: int, session: SessionDep):
     try:
         success = crud.archive_showtime(id, session)

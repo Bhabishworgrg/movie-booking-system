@@ -98,7 +98,7 @@ def update_movie(id: int, movie: MovieIn, session: SessionDep):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[None])
+@router.patch('/{id}/archive', response_model=ResponseModel[None])
 def archive_movie(id: int, session: SessionDep):
     try:
         success = crud.archive_movie(id, session)
