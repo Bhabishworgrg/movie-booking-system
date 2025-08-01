@@ -76,28 +76,6 @@ def read_booking(id: int, session: SessionDep):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[BookingOut])
-def update_booking(id: int, booking: BookingIn, session: SessionDep):
-    try:
-        data = crud.update_booking(id, booking, session)
-    except IntegrityError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, 
-            detail='Invalid input or duplicate entry.'
-        )
-    if not data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f'Booking #{id} not found'
-        )
-
-    return ResponseModel(
-        data=data,
-        code=status.HTTP_200_OK,
-        message=f'Booking #{id} updated successfully'
-    )
-
-
 @router.patch('/{id}', response_model=ResponseModel[None])
 def cancel_booking(id: int, session: SessionDep):
     try:
