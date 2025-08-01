@@ -1,0 +1,121 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+from typing import Annotated, List
+
+from backend.dependencies import get_db
+from backend.crud import showtime as crud
+from backend.schemas.common import ResponseModel
+from backend.schemas.showtime import ShowtimeIn, ShowtimeOut
+
+
+router = APIRouter(prefix='/showtimes', tags=['showtimes'])
+
+SessionDep = Annotated[Session, Depends(get_db)]
+
+
+@router.post('/', response_model=ResponseModel[ShowtimeOut], status_code=status.HTTP_201_CREATED)
+def create_showtime(showtime: ShowtimeIn, session: SessionDep):
+    try:
+        data = crud.create_showtime(showtime, session)
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail='Invalid input or duplicate entry.'
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='An unexpected error occurred while creating the showtime.'
+        )
+   
+    return ResponseModel(
+        data=data,
+        code=status.HTTP_201_CREATED,
+        message=f'Showtime #{data.id} created successfully'
+    )
+
+
+@router.get('/', response_model=ResponseModel[List[ShowtimeOut]])
+def read_showtimes(session: SessionDep):
+    try:
+        data = crud.read_showtimes(session)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='An unexpected error occurred while retrieving showtimes.'
+        )
+
+    return ResponseModel(
+        data=data,
+        code=status.HTTP_200_OK,
+        message='Showtimes retrieved successfully'
+    )
+
+
+@router.get('/{id}', response_model=ResponseModel[ShowtimeOut])
+def read_showtime(id: int, session: SessionDep):
+    try:
+        data = crud.read_showtime(id, session)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='An unexpected error occurred while retrieving the showtime.'
+        )
+
+    if not data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Showtime #{id} not found'
+        )
+
+    return ResponseModel(
+        data=data,
+        code=status.HTTP_200_OK,
+        message=f'Showtime #{id} retrieved successfully'
+    )
+
+
+@router.patch('/{id}', response_model=ResponseModel[ShowtimeOut])
+def update_showtime(id: int, showtime: ShowtimeIn, session: SessionDep):
+    try:
+        data = crud.update_showtime(id, showtime, session)
+    except IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail='Invalid input or duplicate entry.'
+        )
+    if not data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Showtime #{id} not found'
+        )
+
+    return ResponseModel(
+        data=data,
+        code=status.HTTP_200_OK,
+        message=f'Showtime #{id} updated successfully'
+    )
+
+
+@router.patch('/{id}', response_model=ResponseModel[None])
+def archive_showtime(id: int, session: SessionDep):
+    try:
+        success = crud.archive_showtime(id, session)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail='An unexpected error occurred while archiving the showtime.'
+        )
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Showtime #{id} not found'
+        )
+
+    return ResponseModel(
+        data=None,
+        code=status.HTTP_200_OK,
+        message=f'Showtime #{id} archived successfully'
+    )
