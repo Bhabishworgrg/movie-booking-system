@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from backend.models.movie import Movie
-from backend.schemas.movie import MovieIn
+from app.models.movie import Movie
+from app.schemas.movie import MovieIn
 
 
 def create_movie(movie: MovieIn, session: Session) -> Movie:

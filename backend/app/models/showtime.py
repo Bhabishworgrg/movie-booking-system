@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, Boolean, DateTime
 from sqlalchemy.sql import expression
 
-from backend.core.db import Base
+from app.core.db import Base
 
 class Showtime(Base):
     __tablename__ = 'showtimes'

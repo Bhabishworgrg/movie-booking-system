@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from backend.models.booking import Booking
-from backend.schemas.booking import BookingIn
+from app.models.booking import Booking
+from app.schemas.booking import BookingIn
 
 
 def create_booking(booking: BookingIn, session: Session) -> Booking:

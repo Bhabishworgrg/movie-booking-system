@@ -3,10 +3,10 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from backend.dependencies import get_db
-from backend.crud import movie as crud
-from backend.schemas.common import ResponseModel
-from backend.schemas.movie import MovieIn, MovieOut
+from app.dependencies import get_db
+from app.crud import movie as crud
+from app.schemas.common import ResponseModel
+from app.schemas.movie import MovieIn, MovieOut
 
 
 router = APIRouter(prefix='/movies', tags=['movies'])

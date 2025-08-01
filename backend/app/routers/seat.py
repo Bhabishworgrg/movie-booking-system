@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from backend.dependencies import get_db
-from backend.crud import seat as crud
-from backend.schemas.common import ResponseModel
-from backend.schemas.seat import SeatOut
+from app.dependencies import get_db
+from app.crud import seat as crud
+from app.schemas.common import ResponseModel
+from app.schemas.seat import SeatOut
 
 
 router = APIRouter(tags=['showtimes'])

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter 
 from fastapi.responses import RedirectResponse
 
-from backend.routers import movie, showtime, booking, seat
+from app.routers import movie, showtime, booking, seat
 
 app = FastAPI()
 

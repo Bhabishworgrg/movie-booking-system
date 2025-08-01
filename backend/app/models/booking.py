@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime
 from sqlalchemy.sql import expression
 
-from backend.core.db import Base
+from app.core.db import Base
 
 class Booking(Base):
     __tablename__ = 'bookings'

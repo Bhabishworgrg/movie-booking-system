@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from backend.models.showtime import Showtime
-from backend.schemas.showtime import ShowtimeIn
+from app.models.showtime import Showtime
+from app.schemas.showtime import ShowtimeIn
 
 
 def create_showtime(showtime: ShowtimeIn, session: Session) -> Showtime:

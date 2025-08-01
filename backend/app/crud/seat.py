@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-from backend.models.seat import Seat
+from app.models.seat import Seat
 
 
 def create_seats(showtime_id: int, session: Session) -> List[Seat]:
