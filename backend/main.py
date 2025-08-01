@@ -11,6 +11,8 @@ router.include_router(showtime.router)
 router.include_router(booking.router)
 router.include_router(seat.router)
 
+app.include_router(router)
+
 @app.get('/', include_in_schema=False)
 def root():
     return RedirectResponse('/docs')
