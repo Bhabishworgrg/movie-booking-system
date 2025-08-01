@@ -1,0 +1,39 @@
+# Virtual Environment
+.venv/
+.env
+
+#Alembic
+alembic.ini
+migrations/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Kitty Session Files
+session.kitty
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/*
+
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
