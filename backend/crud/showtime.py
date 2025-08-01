@@ -3,7 +3,7 @@ from typing import List
 from datetime import datetime
 
 from backend.models.showtime import Showtime
-from backend.schemas.showtime import ShowtimeIn, ShowtimeOut
+from backend.schemas.showtime import ShowtimeIn
 
 
 def create_showtime(showtime: ShowtimeIn, session: Session) -> Showtime:

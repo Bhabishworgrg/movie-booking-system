@@ -3,7 +3,7 @@ from typing import List
 from datetime import datetime
 
 from backend.models.movie import Movie
-from backend.schemas.movie import MovieIn, MovieOut
+from backend.schemas.movie import MovieIn
 
 
 def create_movie(movie: MovieIn, session: Session) -> Movie:
