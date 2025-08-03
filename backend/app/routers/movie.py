@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.core.dependencies import DBSession
+from app.core.dependencies import DBSession, require_admin
 from app.crud import movie as crud
 from app.schemas.common import ResponseModel
 from app.schemas.movie import MovieIn, MovieOut
@@ -12,7 +12,12 @@ from app.schemas.movie import MovieIn, MovieOut
 router = APIRouter(prefix='/movies', tags=['movies'])
 
 
-@router.post('/', response_model=ResponseModel[MovieOut], status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/', 
+    response_model=ResponseModel[MovieOut], 
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_admin)]
+)
 def create_movie(movie: MovieIn, session: DBSession):
     try:
         data = crud.create_movie(movie, session)
@@ -74,7 +79,11 @@ def read_movie(id: int, session: DBSession):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[MovieOut])
+@router.patch(
+    '/{id}', 
+    response_model=ResponseModel[MovieOut], 
+    dependencies=[Depends(require_admin)]
+)
 def update_movie(id: int, movie: MovieIn, session: DBSession):
     try:
         data = crud.update_movie(id, movie, session)
@@ -96,7 +105,11 @@ def update_movie(id: int, movie: MovieIn, session: DBSession):
     )
 
 
-@router.patch('/{id}/archive', response_model=ResponseModel[None])
+@router.patch(
+    '/{id}/archive', 
+    response_model=ResponseModel[None], 
+    dependencies=[Depends(require_admin)]
+)
 def archive_movie(id: int, session: DBSession):
     try:
         success = crud.archive_movie(id, session)

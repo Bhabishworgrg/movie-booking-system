@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.core.dependencies import DBSession, CurrentUser
+from app.core.dependencies import DBSession, CurrentUser, require_admin
 from app.crud import booking as crud
 from app.schemas.common import ResponseModel
 from app.schemas.booking import BookingIn, BookingOut
@@ -12,7 +12,11 @@ from app.schemas.booking import BookingIn, BookingOut
 router = APIRouter(prefix='/bookings', tags=['bookings'])
 
 
-@router.post('/', response_model=ResponseModel[BookingOut], status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/', 
+    response_model=ResponseModel[BookingOut], 
+    status_code=status.HTTP_201_CREATED
+)
 def create_booking(booking: BookingIn, session: DBSession, user: CurrentUser):
     try:
         data = crud.create_booking(booking, session)
@@ -34,7 +38,11 @@ def create_booking(booking: BookingIn, session: DBSession, user: CurrentUser):
     )
 
 
-@router.get('/', response_model=ResponseModel[List[BookingOut]])
+@router.get(
+    '/', 
+    response_model=ResponseModel[List[BookingOut]], 
+    dependencies=[Depends(require_admin)]
+)
 def read_bookings(session: DBSession):
     try:
         data = crud.read_bookings(session)

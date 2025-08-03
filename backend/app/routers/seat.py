@@ -11,7 +11,10 @@ from app.schemas.seat import SeatOut
 router = APIRouter(tags=['showtimes'])
 
 
-@router.get('/showtimes/{showtime_id}/booked-seats', response_model=ResponseModel[List[SeatOut]])
+@router.get(
+    '/showtimes/{showtime_id}/booked-seats', 
+    response_model=ResponseModel[List[SeatOut]]
+)
 def read_booked_seats(showtime_id: int, session: DBSession):
     try:
         data = crud.read_booked_seats(showtime_id, session)

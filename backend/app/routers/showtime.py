@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.core.dependencies import DBSession
+from app.core.dependencies import DBSession, require_admin
 from app.crud import showtime as crud
 from app.schemas.common import ResponseModel
 from app.schemas.showtime import ShowtimeIn, ShowtimeOut
@@ -12,7 +12,12 @@ from app.schemas.showtime import ShowtimeIn, ShowtimeOut
 router = APIRouter(prefix='/showtimes', tags=['showtimes'])
 
 
-@router.post('/', response_model=ResponseModel[ShowtimeOut], status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/', 
+    response_model=ResponseModel[ShowtimeOut], 
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_admin)]
+)
 def create_showtime(showtime: ShowtimeIn, session: DBSession):
     try:
         data = crud.create_showtime(showtime, session)
@@ -74,7 +79,11 @@ def read_showtime(id: int, session: DBSession):
     )
 
 
-@router.patch('/{id}', response_model=ResponseModel[ShowtimeOut])
+@router.patch(
+    '/{id}', 
+    response_model=ResponseModel[ShowtimeOut],
+    dependencies=[Depends(require_admin)]
+)
 def update_showtime(id: int, showtime: ShowtimeIn, session: DBSession):
     try:
         data = crud.update_showtime(id, showtime, session)
@@ -96,7 +105,11 @@ def update_showtime(id: int, showtime: ShowtimeIn, session: DBSession):
     )
 
 
-@router.patch('/{id}/archive', response_model=ResponseModel[None])
+@router.patch(
+    '/{id}/archive', 
+    response_model=ResponseModel[None],
+    dependencies=[Depends(require_admin)]
+)
 def archive_showtime(id: int, session: DBSession):
     try:
         success = crud.archive_showtime(id, session)
