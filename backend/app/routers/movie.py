@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.dependencies import get_db
+from app.core.dependencies import DBSession
 from app.crud import movie as crud
 from app.schemas.common import ResponseModel
 from app.schemas.movie import MovieIn, MovieOut
@@ -11,11 +11,9 @@ from app.schemas.movie import MovieIn, MovieOut
 
 router = APIRouter(prefix='/movies', tags=['movies'])
 
-SessionDep = Annotated[Session, Depends(get_db)]
-
 
 @router.post('/', response_model=ResponseModel[MovieOut], status_code=status.HTTP_201_CREATED)
-def create_movie(movie: MovieIn, session: SessionDep):
+def create_movie(movie: MovieIn, session: DBSession):
     try:
         data = crud.create_movie(movie, session)
     except IntegrityError:
@@ -37,7 +35,7 @@ def create_movie(movie: MovieIn, session: SessionDep):
 
 
 @router.get('/', response_model=ResponseModel[List[MovieOut]])
-def read_movies(session: SessionDep):
+def read_movies(session: DBSession):
     try:
         data = crud.read_movies(session)
     except Exception:
@@ -54,7 +52,7 @@ def read_movies(session: SessionDep):
 
 
 @router.get('/{id}', response_model=ResponseModel[MovieOut])
-def read_movie(id: int, session: SessionDep):
+def read_movie(id: int, session: DBSession):
     try:
         data = crud.read_movie(id, session)
     except Exception:
@@ -77,7 +75,7 @@ def read_movie(id: int, session: SessionDep):
 
 
 @router.patch('/{id}', response_model=ResponseModel[MovieOut])
-def update_movie(id: int, movie: MovieIn, session: SessionDep):
+def update_movie(id: int, movie: MovieIn, session: DBSession):
     try:
         data = crud.update_movie(id, movie, session)
     except IntegrityError:
@@ -99,7 +97,7 @@ def update_movie(id: int, movie: MovieIn, session: SessionDep):
 
 
 @router.patch('/{id}/archive', response_model=ResponseModel[None])
-def archive_movie(id: int, session: SessionDep):
+def archive_movie(id: int, session: DBSession):
     try:
         success = crud.archive_movie(id, session)
     except Exception:

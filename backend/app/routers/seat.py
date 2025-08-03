@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.dependencies import get_db
+from app.core.dependencies import DBSession
 from app.crud import seat as crud
 from app.schemas.common import ResponseModel
 from app.schemas.seat import SeatOut
@@ -10,11 +10,9 @@ from app.schemas.seat import SeatOut
 
 router = APIRouter(tags=['showtimes'])
 
-SessionDep = Annotated[Session, Depends(get_db)]
-
 
 @router.get('/showtimes/{showtime_id}/booked-seats', response_model=ResponseModel[List[SeatOut]])
-def read_booked_seats(showtime_id: int, session: SessionDep):
+def read_booked_seats(showtime_id: int, session: DBSession):
     try:
         data = crud.read_booked_seats(showtime_id, session)
     except Exception:

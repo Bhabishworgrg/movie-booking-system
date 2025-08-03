@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.dependencies import get_db
+from app.core.dependencies import DBSession
 from app.crud import auth as crud
 from app.schemas.common import ResponseModel
 from app.schemas.auth import LoginRequest, RegisterRequest
@@ -10,11 +10,9 @@ from app.schemas.auth import LoginRequest, RegisterRequest
 
 router = APIRouter(prefix='/auths', tags=['auths'])
 
-SessionDep = Annotated[Session, Depends(get_db)]
-
 
 @router.post('/register', response_model=ResponseModel[None], status_code=status.HTTP_201_CREATED)
-def register(request: RegisterRequest, session: SessionDep):
+def register(request: RegisterRequest, session: DBSession):
     user = crud.read_user_by_email(request.email, session)
     if user:
         raise HTTPException(
@@ -38,7 +36,7 @@ def register(request: RegisterRequest, session: SessionDep):
 
 
 @router.post('/login', response_model=ResponseModel[None])
-def login(request: LoginRequest, session: SessionDep):
+def login(request: LoginRequest, session: DBSession):
     user = crud.read_user_by_email(request.email, session)
     if not user:
         raise HTTPException(

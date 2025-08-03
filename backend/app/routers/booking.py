@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.dependencies import get_db
+from app.core.dependencies import DBSession
 from app.crud import booking as crud
 from app.schemas.common import ResponseModel
 from app.schemas.booking import BookingIn, BookingOut
@@ -11,11 +11,9 @@ from app.schemas.booking import BookingIn, BookingOut
 
 router = APIRouter(prefix='/bookings', tags=['bookings'])
 
-SessionDep = Annotated[Session, Depends(get_db)]
-
 
 @router.post('/', response_model=ResponseModel[BookingOut], status_code=status.HTTP_201_CREATED)
-def create_booking(booking: BookingIn, session: SessionDep):
+def create_booking(booking: BookingIn, session: DBSession):
     try:
         data = crud.create_booking(booking, session)
     except IntegrityError:
@@ -37,7 +35,7 @@ def create_booking(booking: BookingIn, session: SessionDep):
 
 
 @router.get('/', response_model=ResponseModel[List[BookingOut]])
-def read_bookings(session: SessionDep):
+def read_bookings(session: DBSession):
     try:
         data = crud.read_bookings(session)
     except Exception:
@@ -54,7 +52,7 @@ def read_bookings(session: SessionDep):
 
 
 @router.get('/{id}', response_model=ResponseModel[BookingOut])
-def read_booking(id: int, session: SessionDep):
+def read_booking(id: int, session: DBSession):
     try:
         data = crud.read_booking(id, session)
     except Exception:
@@ -77,7 +75,7 @@ def read_booking(id: int, session: SessionDep):
 
 
 @router.patch('/{id}/cancel', response_model=ResponseModel[None])
-def cancel_booking(id: int, session: SessionDep):
+def cancel_booking(id: int, session: DBSession):
     try:
         success = crud.cancel_booking(id, session)
     except Exception:

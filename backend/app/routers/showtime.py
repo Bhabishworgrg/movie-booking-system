@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from typing import Annotated, List
 
-from app.dependencies import get_db
+from app.core.dependencies import DBSession
 from app.crud import showtime as crud
 from app.schemas.common import ResponseModel
 from app.schemas.showtime import ShowtimeIn, ShowtimeOut
@@ -11,11 +11,9 @@ from app.schemas.showtime import ShowtimeIn, ShowtimeOut
 
 router = APIRouter(prefix='/showtimes', tags=['showtimes'])
 
-SessionDep = Annotated[Session, Depends(get_db)]
-
 
 @router.post('/', response_model=ResponseModel[ShowtimeOut], status_code=status.HTTP_201_CREATED)
-def create_showtime(showtime: ShowtimeIn, session: SessionDep):
+def create_showtime(showtime: ShowtimeIn, session: DBSession):
     try:
         data = crud.create_showtime(showtime, session)
     except IntegrityError:
@@ -37,7 +35,7 @@ def create_showtime(showtime: ShowtimeIn, session: SessionDep):
 
 
 @router.get('/', response_model=ResponseModel[List[ShowtimeOut]])
-def read_showtimes(session: SessionDep):
+def read_showtimes(session: DBSession):
     try:
         data = crud.read_showtimes(session)
     except Exception:
@@ -54,7 +52,7 @@ def read_showtimes(session: SessionDep):
 
 
 @router.get('/{id}', response_model=ResponseModel[ShowtimeOut])
-def read_showtime(id: int, session: SessionDep):
+def read_showtime(id: int, session: DBSession):
     try:
         data = crud.read_showtime(id, session)
     except Exception:
@@ -77,7 +75,7 @@ def read_showtime(id: int, session: SessionDep):
 
 
 @router.patch('/{id}', response_model=ResponseModel[ShowtimeOut])
-def update_showtime(id: int, showtime: ShowtimeIn, session: SessionDep):
+def update_showtime(id: int, showtime: ShowtimeIn, session: DBSession):
     try:
         data = crud.update_showtime(id, showtime, session)
     except IntegrityError:
@@ -99,7 +97,7 @@ def update_showtime(id: int, showtime: ShowtimeIn, session: SessionDep):
 
 
 @router.patch('/{id}/archive', response_model=ResponseModel[None])
-def archive_showtime(id: int, session: SessionDep):
+def archive_showtime(id: int, session: DBSession):
     try:
         success = crud.archive_showtime(id, session)
     except Exception:
