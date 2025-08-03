@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Annotated, List
 
 from app.core.dependencies import DBSession
+from app.core.security import verify_password
 from app.crud import auth as crud
 from app.schemas.common import ResponseModel
 from app.schemas.auth import LoginRequest, RegisterRequest
@@ -44,7 +45,7 @@ def login(request: LoginRequest, session: DBSession):
             detail='Invalid email or password'
         )
 
-    is_correct_password = crud.verify_password(request.password, user.password_hash)
+    is_correct_password = verify_password(request.password, user.password_hash)
     if not is_correct_password:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
