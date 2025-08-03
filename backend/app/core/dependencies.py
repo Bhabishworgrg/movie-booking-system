@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from app.core.db import SessionLocal
 from app.core.security import decode_jwt_token
 from app.crud.auth import read_user_by_email
-from app.models.user import User
+from app.models.user import User, Role
+
 
 def get_db() -> Session:
     db = SessionLocal()
@@ -17,10 +18,10 @@ def get_db() -> Session:
 
 DBSession = Annotated[Session, Depends(get_db)]
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/v1/auth/login')
-OAuthToken = Annotated[str, Depends(oauth2_scheme)]
 
-def get_current_user(token: OAuthToken, session: DBSession) -> User:
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/v1/auth/login')
+
+def get_current_user(session: DBSession, token: str = Depends(oauth2_scheme)) -> User:
     decoded_token = decode_jwt_token(token)
     if not decoded_token:
         raise HTTPException(
@@ -45,3 +46,11 @@ def get_current_user(token: OAuthToken, session: DBSession) -> User:
     return user
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+def require_admin(user: CurrentUser) -> None:
+    if user.role != Role.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='Admin privileges required'
+        )

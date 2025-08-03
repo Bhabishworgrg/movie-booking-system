@@ -19,6 +19,7 @@ def create_jwt_token(user: User) -> str:
     payload = {
         'sub': user.id,
         'email': user.email,
+        'role': user.role.value,
         'exp': expire
     }
      
