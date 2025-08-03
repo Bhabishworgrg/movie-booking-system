@@ -43,3 +43,5 @@ def get_current_user(token: OAuthToken, session: DBSession) -> User:
         )
 
     return user
+
+CurrentUser = Annotated[User, Depends(get_current_user)]
