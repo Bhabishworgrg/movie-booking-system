@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Annotated, List
 
 from app.core.dependencies import DBSession
-from app.core.security import verify_password
+from app.core.security import verify_password, create_jwt_token
 from app.crud import auth as crud
 from app.schemas.common import ResponseModel
 from app.schemas.auth import LoginRequest, RegisterRequest
@@ -52,8 +52,13 @@ def login(request: LoginRequest, session: DBSession):
             detail='Invalid email or password'
         )
 
+    token = create_jwt_token({
+        'sub': user.id, 
+        'email': user.email, 
+        'username': user.username
+    })
     return ResponseModel(
-        data=None,
+        data={'token': token},
         code=status.HTTP_200_OK,
         message='Login successful'
     )
