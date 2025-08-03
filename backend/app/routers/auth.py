@@ -52,11 +52,7 @@ def login(request: LoginRequest, session: DBSession):
             detail='Invalid email or password'
         )
 
-    token = create_jwt_token({
-        'sub': user.id, 
-        'email': user.email, 
-        'username': user.username
-    })
+    token = create_jwt_token(user)
     return ResponseModel(
         data={'token': token},
         code=status.HTTP_200_OK,

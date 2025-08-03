@@ -3,6 +3,7 @@ from datetime import datetime
 from jwt import encode, decode
 
 from app.core.config import settings
+from app.models.user import User
 
 password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -12,12 +13,17 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return password_context.verify(plain_password, hashed_password)
 
-def create_jwt_token(data: dict) -> str:
+def create_jwt_token(user: User) -> str:
     expire = datetime.utcnow() + settings.EXPIRES_DELTA
-    to_encode = {**data, 'exp': expire}
+
+    payload = {
+        'sub': user.id,
+        'email': user.email,
+        'exp': expire
+    }
      
     return encode(
-        payload=to_encode,
+        payload=payload,
         key=settings.SECRET_KEY, 
         algorithm=settings.ALGORITHM
     )
