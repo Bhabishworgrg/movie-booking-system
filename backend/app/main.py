@@ -2,10 +2,11 @@ from fastapi import FastAPI, APIRouter
 from fastapi.responses import RedirectResponse
 
 from app.routers import *
+from app.core.config import settings
 
-app = FastAPI()
+app = FastAPI(title=settings.PROJECT_NAME)
 
-router = APIRouter()
+router = APIRouter(prefix=settings.API_PREFIX)
 router.include_router(movie)
 router.include_router(showtime)
 router.include_router(booking)
