@@ -6,7 +6,7 @@ from app.core.dependencies import DBSession
 from app.core.security import verify_password, create_jwt_token
 from app.crud import auth as crud
 from app.schemas.common import ResponseModel
-from app.schemas.auth import LoginRequest, RegisterRequest
+from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 
 
 router = APIRouter(prefix='/auth', tags=['auth'])
@@ -25,7 +25,7 @@ def register(request: RegisterRequest, session: DBSession):
         data = crud.create_user(request, session)
     except Exception:
         raise HTTPException(
-            status_code=status.HTTP_500_BAD_REQUEST,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail='An unexpected error occurred while registering the user.'
         )
 
@@ -36,7 +36,7 @@ def register(request: RegisterRequest, session: DBSession):
     )
 
 
-@router.post('/login', response_model=ResponseModel[None])
+@router.post('/login', response_model=ResponseModel[TokenResponse])
 def login(request: LoginRequest, session: DBSession):
     user = crud.read_user_by_email(request.email, session)
     if not user:

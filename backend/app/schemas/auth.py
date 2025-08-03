@@ -8,3 +8,6 @@ class RegisterRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+
+class TokenResponse(BaseModel):
+    token: str
