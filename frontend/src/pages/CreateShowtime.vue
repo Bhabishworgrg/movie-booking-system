@@ -36,7 +36,7 @@ const router = useRouter()
 onMounted(async () => {
 	try {
 		const res = await axios.get('http://localhost:8000/api/v1/movies')
-		movies.value = res.data.data || res.data // Adjust if backend wraps data inside `data`
+		movies.value = res.data.data
 	} catch (err) {
 		alert('Failed to load movies')
 	}
@@ -46,17 +46,17 @@ const createShowtime = async () => {
 	try {
 		const token = localStorage.getItem('token')
 
-		await axios.post('http://localhost:8000/api/v1/showtimes', {
+		const res = await axios.post('http://localhost:8000/api/v1/showtimes', {
 			start_time: startTime.value,
 			movie_id: selectedMovieId.value
 		}, {
 			headers: { Authorization: `Bearer ${token}` }
 		})
 
-		alert('Showtime created successfully')
+		alert(res.data.message)
 		router.push('/showtimes')
 	} catch (err) {
-		alert(err.response?.data?.detail || 'Failed to create showtime')
+		alert(err.response.data.detail)
 	}
 }
 

@@ -11,7 +11,7 @@
 
 		<!-- Showtimes List -->
 		<ul>
-			<li v-for="show in showtimes" :key="show.id" style="margin-bottom: 20px;">
+			<li v-for="show in showtimes" :key="show.id" style="margin-bottom: 20px;" @click="goToShowtime(show.id)">
 				<h3>{{ show.movie.name }}</h3>
 				<p><strong>Time:</strong> {{ show.start_time }}</p>
 			</li>
@@ -38,4 +38,5 @@ onMounted(async () => {
 
 const goToHome = () => router.push('/')
 const goToCreateShowtime = () => router.push('/showtimes/create')
+const goToShowtime = (id) => router.push(`/showtimes/${id}`)
 </script>

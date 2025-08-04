@@ -18,6 +18,9 @@
 			<button @click="goToMovies" style="font-size: 24px; padding: 20px 40px; margin: 20px;">Browse Movies</button>
 			<button @click="goToShowtimes" style="font-size: 24px; padding: 20px 40px; margin: 20px;">View Showtimes</button>
 		</div>
+		<div style="text-align: center; margin-top: 100px;">
+			<button @click="goToBookings" style="font-size: 24px; padding: 20px 40px; margin: 20px;">My Bookings</button>
+		</div>
 	</div>
 </template>
 
@@ -32,6 +35,7 @@ const goToLogin = () => router.push('/login')
 const goToRegister = () => router.push('/register')
 const goToMovies = () => router.push('/movies')
 const goToShowtimes = () => router.push('/showtimes')
+const goToBookings = () => router.push('/bookings')
 
 const logout = () => {
 	localStorage.removeItem('token')
