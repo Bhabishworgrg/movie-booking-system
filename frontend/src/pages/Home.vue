@@ -3,7 +3,11 @@
 		<!-- Top bar with heading and auth buttons -->
 		<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
 			<h1>Movie Booking System</h1>
-			<div>
+			<div v-if="user">
+				<span>{{ user.username }}</span>
+				<button @click="logout">Logout</button>
+			</div>
+			<div v-else>
 				<button @click="goToLogin" style="margin-right: 10px;">Login</button>
 				<button @click="goToRegister">Register</button>
 			</div>
@@ -19,11 +23,26 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 const router = useRouter()
+const user = ref(null)
 
 const goToLogin = () => router.push('/login')
 const goToRegister = () => router.push('/register')
 const goToMovies = () => router.push('/movies')
 const goToShowtimes = () => router.push('/showtimes')
+
+const logout = () => {
+	localStorage.removeItem('token')
+	localStorage.removeItem('user')
+	user.value = null
+}
+
+onMounted(() => {
+	const storedUser = localStorage.getItem('user')
+	if (storedUser) {
+		user.value = JSON.parse(storedUser)
+	}
+})
 </script>

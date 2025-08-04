@@ -5,15 +5,15 @@
 			<h1>Showtimes</h1>
 			<div>
 				<button @click="goToHome">Home</button>
+				<button @click="goToCreateShowtime">Add Showtime</button>
 			</div>
 		</div>
 
 		<!-- Showtimes List -->
 		<ul>
 			<li v-for="show in showtimes" :key="show.id" style="margin-bottom: 20px;">
-				<h3>{{ show.movie_title }}</h3>
-				<p><strong>Time:</strong> {{ show.time }}</p>
-				<p><strong>Location:</strong> {{ show.location }}</p>
+				<h3>{{ show.movie.name }}</h3>
+				<p><strong>Time:</strong> {{ show.start_time }}</p>
 			</li>
 		</ul>
 	</div>
@@ -30,11 +30,12 @@ const router = useRouter()
 onMounted(async () => {
 	try {
 		const res = await axios.get('http://localhost:8000/api/v1/showtimes')
-		showtimes.value = res.data
+		showtimes.value = res.data.data
 	} catch (err) {
 		alert(err.response.data.detail)
 	}
 })
 
 const goToHome = () => router.push('/')
+const goToCreateShowtime = () => router.push('/showtimes/create')
 </script>

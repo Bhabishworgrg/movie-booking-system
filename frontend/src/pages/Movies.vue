@@ -5,13 +5,15 @@
 			<h1>Movies</h1>
 			<div>
 				<button @click="goToHome">Home</button>
+				<button @click="goToCreateMovie">Add Movie</button>
 			</div>
 		</div>
 
 		<!-- Movie List -->
 		<ul>
 			<li v-for="movie in movies" :key="movie.id" style="margin-bottom: 20px;">
-				<h3>{{ movie.title }}</h3>
+				<h3>{{ movie.name }}</h3>
+				<p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
 				<p>{{ movie.description }}</p>
 			</li>
 		</ul>
@@ -29,11 +31,12 @@ const router = useRouter()
 onMounted(async () => {
 	try {
 		const res = await axios.get('http://localhost:8000/api/v1/movies')
-		movies.value = res.data
+		movies.value = res.data.data
 	} catch (err) {
 		alert(err.response.data.detail)
 	}
 })
 
 const goToHome = () => router.push('/')
+const goToCreateMovie = () => router.push('/movies/create')
 </script>

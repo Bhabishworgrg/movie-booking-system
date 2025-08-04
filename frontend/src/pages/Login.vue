@@ -30,14 +30,18 @@ const login = async () => {
 			password: password.value
 		})
 
-		const token = res.data.access_token
+		const token = res.data.data.token
 		localStorage.setItem('token', token)
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+		const payloadBase64 = token.split('.')[1]
+		const decodedPayload = JSON.parse(atob(payloadBase64))
+		localStorage.setItem('user', JSON.stringify(decodedPayload))
 
 		alert(res.data.message)
 		router.push('/')
 	} catch (err) {
-		alert(err.response.data.detail)
+		console.error(err)
 	}
 }
 
