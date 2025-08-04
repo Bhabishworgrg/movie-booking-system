@@ -22,7 +22,10 @@
 		</ul>
 
 		<button @click="bookSeats" :disabled="selectedSeats.length === 0">
-			Book Selected Seats
+			Book Seats
+		</button>
+		<button @click="deleteShowtime" v-if="isAdmin">
+			Delete Showtime
 		</button>
 		<button @click="goBack">Back</button>
 	</div>
@@ -37,6 +40,13 @@ const route = useRoute()
 const router = useRouter()
 const showtime = ref(null)
 const selectedSeats = ref([])
+const isAdmin = ref(false)
+
+const token = localStorage.getItem('token')
+if (token) {
+	const decodedToken = JSON.parse(atob(token.split('.')[1]))
+	isAdmin.value = decodedToken.role === 'admin'
+}
 
 onMounted(async () => {
 	try {
@@ -63,6 +73,20 @@ const bookSeats = async () => {
 
 		const showtime_res = await axios.get(`http://localhost:8000/api/v1/showtimes/${route.params.id}`)
 		showtime.value = showtime_res.data.data
+	} catch (err) {
+		alert(err.response.data.detail)
+	}
+}
+
+const deleteShowtime = async () => {
+	try {
+		const res = await
+		axios.patch(`http://localhost:8000/api/v1/showtimes/${route.params.id}/archive`,
+			{},
+			{ headers: { Authorization: `Bearer ${token}` }}
+		)
+		alert(res.data.message)
+		router.push('/showtimes')
 	} catch (err) {
 		alert(err.response.data.detail)
 	}
