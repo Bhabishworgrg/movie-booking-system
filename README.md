@@ -64,14 +64,27 @@ npm install
 ---
 
 ## Usage
-1. In the `backend` directory, start the FastAPI server:
+1. In the `backend` directory, activate virtual environment:
+```bash
+source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+```
+
+2. Start the FastAPI server:
 ```bash
 fastapi dev app/main.py
 ```
 
-2. In the `frontend` directory, start the Vue.js application:
+3. In the `frontend` directory, start the Vue.js application:
 ```bash
 npm run dev
 ```
+
+4. Access them:
+
+**Vue Client**
+- http://localhost:5173/
+
+**Backend Swagger Docs**
+- http://127.0.0.1:8000/
 
 ---
