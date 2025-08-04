@@ -21,3 +21,9 @@ def create_seats(showtime_id: int, session: Session) -> List[Seat]:
 
 def read_booked_seats(showtime_id: int, session: Session) -> List[Seat]:
     return session.query(Seat).filter_by(showtime_id=showtime_id, is_booked=True).all()
+
+def read_seats_for_booking(booking, session: Session) -> List[Seat]:
+    return session.query(Seat).filter(
+        Seat.id.in_(booking.seat_ids), 
+        Seat.is_booked == False
+    ).all()

@@ -7,6 +7,7 @@ from app.core.dependencies import DBSession, CurrentUser, require_admin
 from app.crud import booking as crud
 from app.schemas.common import ResponseModel
 from app.schemas.booking import BookingIn, BookingOut
+from app.crud.seat import read_seats_for_booking 
 
 
 router = APIRouter(prefix='/bookings', tags=['bookings'])
@@ -18,6 +19,21 @@ router = APIRouter(prefix='/bookings', tags=['bookings'])
     status_code=status.HTTP_201_CREATED
 )
 def create_booking(booking: BookingIn, session: DBSession, user: CurrentUser):
+    seats = read_seats_for_booking(booking, session)
+
+    if len(seats) != len(booking.seat_ids):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Invalid seat selection or insufficient seats available.'
+        )
+
+    invalid_seats = [seat.id for seat in seats if seat.showtime_id != booking.showtime_id]
+    if invalid_seats:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f'Seats {invalid_seats} do not belong to the selected showtime.'
+        )
+
     try:
         data = crud.create_booking(booking, session, user.id)
     except IntegrityError:
