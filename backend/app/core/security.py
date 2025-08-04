@@ -17,6 +17,7 @@ def create_jwt_token(user: User) -> str:
     expire = datetime.utcnow() + settings.EXPIRES_DELTA
 
     payload = {
+        'sub': str(user.id),
         'username': user.username,
         'email': user.email,
         'role': user.role.value,
