@@ -21,7 +21,6 @@ import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
-const token = ref('')
 const router = useRouter()
 
 const login = async () => {
@@ -30,11 +29,15 @@ const login = async () => {
 			email: email.value,
 			password: password.value
 		})
-		token.value = res.data.access_token
-		alert('Login successful!')
+
+		const token = res.data.access_token
+		localStorage.setItem('token', token)
+		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+		alert(res.data.message)
 		router.push('/')
 	} catch (err) {
-		alert('Login failed')
+		alert(err.response.data.detail)
 	}
 }
 

@@ -28,8 +28,12 @@ const showtimes = ref([])
 const router = useRouter()
 
 onMounted(async () => {
-	const res = await axios.get('http://localhost:8000/api/v1/showtimes')
-	showtimes.value = res.data
+	try {
+		const res = await axios.get('http://localhost:8000/api/v1/showtimes')
+		showtimes.value = res.data
+	} catch (err) {
+		alert(err.response.data.detail)
+	}
 })
 
 const goToHome = () => router.push('/')
