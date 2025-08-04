@@ -14,6 +14,7 @@
 				@click="goToBooking(booking.id)">
 				<h3>{{ booking.showtime.movie.name }}</h3>
 				<p><strong>Showtime:</strong> {{ booking.showtime.start_time }}</p>
+				<p><strong>Status:</strong> {{ booking.cancelled_at ? 'Cancelled' : 'Booked' }}</p>
 			</li>
 		</ul>
 	</div>

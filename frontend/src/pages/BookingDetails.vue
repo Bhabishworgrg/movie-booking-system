@@ -8,6 +8,9 @@
 		<p><strong>Status:</strong> {{ booking.cancelled_at ? 'Cancelled' : 'Booked' }}</p>
 		<p v-if="booking.cancelled_at"><strong>Cancelled At:</strong> {{ booking.cancelled_at }}</p>
 
+		<button v-if="!booking.cancelled_at" @click="cancelBooking">
+			Cancel Booking
+		</button>
 		<button @click="goBack">Back</button>
 	</div>
 </template>
@@ -34,6 +37,26 @@ onMounted(async () => {
 		alert(err.response.data.detail)
 	}
 })
+
+const cancelBooking = async () => {
+	if (!confirm('Are you sure you want to cancel this booking?')) {
+		return
+	}
+
+	try {
+		const token = localStorage.getItem('token')
+
+		const res = await axios.patch(`http://localhost:8000/api/v1/bookings/${booking.value.id}/cancel`,
+			{},
+			{ headers: { Authorization: `Bearer ${token}` }}
+		)
+
+		alert(res.data.message)
+		booking.value.cancelled_at = new Date().toISOString()
+	} catch (err) {
+		alert(err.response.data.detail)
+	}
+}
 
 const goBack = () => router.back()
 </script>
