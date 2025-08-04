@@ -4,6 +4,7 @@ from datetime import datetime
 
 from app.models.booking import Booking
 from app.models.booking_seat import BookingSeat
+from app.models.seat import Seat
 from app.schemas.booking import BookingIn
 
 
@@ -23,6 +24,12 @@ def create_booking(booking: BookingIn, session: Session, user_id: int) -> Bookin
     ]
 
     session.add_all(db_booking_seats)
+
+    session.query(Seat).filter(Seat.id.in_(booking.seat_ids)).update(
+        {Seat.is_booked: True}, 
+        synchronize_session='fetch'
+    )
+
     session.commit()
 
     return db_booking
