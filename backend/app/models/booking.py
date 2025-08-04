@@ -11,6 +11,8 @@ class Booking(Base):
     booked_at = Column(DateTime, nullable=False)
     cancelled_at = Column(DateTime)
     showtime_id = Column(Integer, ForeignKey('showtimes.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 
     showtime = relationship('Showtime', back_populates='bookings')
     seats = relationship('Seat', secondary='booking_seats', back_populates='bookings')
+    user = relationship('User', back_populates='bookings')

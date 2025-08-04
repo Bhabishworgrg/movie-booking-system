@@ -19,16 +19,16 @@ router = APIRouter(prefix='/bookings', tags=['bookings'])
 )
 def create_booking(booking: BookingIn, session: DBSession, user: CurrentUser):
     try:
-        data = crud.create_booking(booking, session)
+        data = crud.create_booking(booking, session, user.id)
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, 
             detail='Invalid input or duplicate entry.'
         )
-    except Exception:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail='An unexpected error occurred while creating the booking.'
+            detail='An unexpected error occurred while creating the booking.' + str(e)
         )
    
     return ResponseModel(
