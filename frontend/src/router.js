@@ -6,6 +6,7 @@ import Register from './pages/Register.vue'
 
 import Movies from './pages/Movies.vue'
 import CreateMovie from './pages/CreateMovie.vue'
+import MovieDetails from './pages/MovieDetails.vue'
 
 import Showtimes from './pages/Showtimes.vue'
 import CreateShowtime from './pages/CreateShowtime.vue'
@@ -22,6 +23,7 @@ export default createRouter({
 		{ path: '/register', component: Register },
 		{ path: '/movies', component: Movies },
 		{ path: '/movies/create', component: CreateMovie },
+		{ path: '/movies/:id', component: MovieDetails },
 		{ path: '/showtimes', component: Showtimes },
 		{ path: '/showtimes/create', component: CreateShowtime },
 		{ path: '/showtimes/:id', component: ShowtimeDetails },

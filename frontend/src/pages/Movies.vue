@@ -11,10 +11,8 @@
 
 		<!-- Movie List -->
 		<ul>
-			<li v-for="movie in movies" :key="movie.id" style="margin-bottom: 20px;">
+			<li v-for="movie in movies" :key="movie.id" style="margin-bottom: 20px;" @click="goToMovie(movie.id)">
 				<h3>{{ movie.name }}</h3>
-				<p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
-				<p>{{ movie.description }}</p>
 			</li>
 		</ul>
 	</div>
@@ -39,4 +37,5 @@ onMounted(async () => {
 
 const goToHome = () => router.push('/')
 const goToCreateMovie = () => router.push('/movies/create')
+const goToMovie = (id) => router.push(`/movies/${id}`)
 </script>
