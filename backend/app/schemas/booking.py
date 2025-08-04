@@ -12,5 +12,6 @@ class BookingIn(BaseModel):
 class BookingOut(BaseModel):
     id: int
     booked_at: datetime
+    cancelled_at: datetime | None
     showtime: ShowtimeOut
     seats: List[SeatOut]
