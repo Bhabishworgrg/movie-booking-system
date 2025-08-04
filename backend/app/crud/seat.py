@@ -14,8 +14,7 @@ def create_seats(showtime_id: int, session: Session) -> List[Seat]:
     ]
 
     session.add_all(db_seats)
-    session.commit()
-    session.refresh(db_seats)
+    session.flush()
 
     return db_seats
 

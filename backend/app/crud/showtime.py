@@ -4,12 +4,18 @@ from datetime import datetime
 
 from app.models.showtime import Showtime
 from app.schemas.showtime import ShowtimeIn
+from app.crud.seat import create_seats
 
 
 def create_showtime(showtime: ShowtimeIn, session: Session) -> Showtime:
-    db_showtime = Showtime(**showtime.model_dump()) 
+    db_showtime = Showtime(**showtime.model_dump(exclude={'seats'}))
 
     session.add(db_showtime)
+    session.flush()
+
+    db_seats = create_seats(db_showtime.id, session)
+    db_showtime.seats = db_seats
+
     session.commit()
     session.refresh(db_showtime)
 
