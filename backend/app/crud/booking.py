@@ -36,15 +36,19 @@ def create_booking(booking: BookingIn, session: Session, user_id: int) -> Bookin
 
 
 def read_bookings(session: Session) -> List[Booking]:
-    return session.query(Booking).filter_by(is_archived=False).all()
+    return session.query(Booking).filter_by().all()
 
 
 def read_booking(id: int, session: Session) -> Booking | None:
-    return session.query(Booking).filter_by(id=id, is_archived=False).first()
+    return session.query(Booking).filter_by(id=id).first()
+
+
+def read_bookings_by_user(user_id: int, session: Session) -> List[Booking]:
+    return session.query(Booking).filter_by(user_id=user_id).all()
 
 
 def cancel_booking(id: int, session: Session) -> None:
-    db_booking = session.query(Booking).filter_by(id=id, is_archived=False).first()
+    db_booking = session.query(Booking).filter_by(id=id).first()
 
     db_booking.is_cancelled = True
     db_booking.cancelled_at = datetime.utcnow()
